@@ -1,10 +1,3 @@
-export const JWT_CONSTANTS = {
-  secret:
-    'DO NOT USE THIS VALUE. INSTEAD, CREATE A COMPLEX SECRET AND KEEP IT SAFE OUTSIDE OF THE SOURCE CODE.',
-};
-
-export const SALT_ROUND = 10;
-
 export const IS_PUBLIC_KEY = 'isPublic';
 
 export const SPENDING_CATEGORIES = [

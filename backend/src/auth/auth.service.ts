@@ -7,12 +7,13 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/user.entity';
 import * as bcrypt from 'bcrypt';
-import { SALT_ROUND } from 'src/common/constants';
 import { SignInDto, SignUpDto } from 'src/common/dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly configService: ConfigService,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -57,7 +58,10 @@ export class AuthService {
       throw new ConflictException('이미 존재하는 이메일입니다.');
     }
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
+    const hashedPassword = await bcrypt.hash(
+      password,
+      this.configService.get<number>('SALT_ROUND'),
+    );
 
     await this.usersService.createUser(email, hashedPassword);
   }

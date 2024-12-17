@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from './auth/guard/auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,12 +17,13 @@ async function bootstrap() {
     }),
   );
 
-  const jwtService = app.get(JwtService);
-  const reflector = app.get(Reflector);
-
-  const authGuard = new AuthGuard(jwtService, reflector);
-
-  app.useGlobalGuards(authGuard);
+  app.useGlobalGuards(
+    new AuthGuard(
+      app.get(ConfigService),
+      app.get(JwtService),
+      app.get(Reflector),
+    ),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Personal Finance Tracker')
